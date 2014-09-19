@@ -1,4 +1,4 @@
-(function () {
+(function (window, document, undefined) {
 	'use strict';
 
 	/**
@@ -227,4 +227,7 @@
 			storage.setItem(key, content);
 		}
 	};
-}());
+	
+	window.ErrorLogger = ErrorLogger;
+	
+}(window, document));
