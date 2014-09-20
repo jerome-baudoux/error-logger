@@ -1,3 +1,20 @@
+/**
+ * Error-Logger by Jerome Baudoux
+ * http://www.jerome-baudoux.com
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
 (function (window, document, undefined) {
 	'use strict';
 
@@ -25,14 +42,14 @@
 	/**
 	 * Specify the size of the chunks we want to keep
 	 */
-	ErrorLogger.getInstance.setNbChunks = function(nbChunks) {
+	ErrorLogger.prototype.setNbChunks = function(nbChunks) {
 		this.nbChunks = nbChunks;
 	};
 
 	/**
 	 * Specify the amount of lines in a chunk
 	 */
-	ErrorLogger.getInstance.setLinesInChunks = function(nbLines) {
+	ErrorLogger.prototype.setLinesInChunks = function(nbLines) {
 		this.linesInChunks = nbLines;
 	};
 
@@ -66,6 +83,10 @@
 				var index = this.getIndex();
 				var content = '';
 				for (var i = index.firstChunk; i <= index.currentChunk; i++) {
+					var item = storage.getItem(ErrorLogger.LOCALSTORAGE_PREFIX_KEY + i);
+					if(!item || item === null) {
+						continue;
+					}
 					if (content) {
 						content = content + '\n' + storage.getItem(ErrorLogger.LOCALSTORAGE_PREFIX_KEY + i);
 					} else {
@@ -190,8 +211,8 @@
 		var storage = this.getLocalStorage();
 		if(storage) {
 			try {
-				if (index.currentChunk - index.firstChunk > this.nbChunks) {
-					for (var i = index.firstChunk; i <= index.currentChunk - this.nbChunks; i++) {
+				if (index.currentChunk - index.firstChunk >= this.nbChunks) {
+					for (var i = index.firstChunk; i < index.currentChunk - this.nbChunks; i++) {
 						storage.removeItem(ErrorLogger.LOCALSTORAGE_PREFIX_KEY + i);
 					}
 					index.firstChunk = index.currentChunk - this.nbChunks + 1;
@@ -212,7 +233,7 @@
 			var key = ErrorLogger.LOCALSTORAGE_PREFIX_KEY + index.currentChunk;
 			var content = storage.getItem(key);
 			var nbLines = this.countLines(content);
-			if(nbLines>this.linesInChunks) {
+			if(nbLines>=this.linesInChunks) {
 				index.currentChunk++;
 				this.removeOldLogs(index);
 				this.saveIndex(index);
