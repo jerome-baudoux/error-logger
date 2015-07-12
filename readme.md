@@ -1,4 +1,4 @@
-Error-logger by Jérôme Baudoux [![Build Status](https://travis-ci.org/leonsulivan/error-logger.svg?branch=master)](https://travis-ci.org/leonsulivan/error-logger)
+Error-logger by Jérôme Baudoux [![Build Status](https://travis-ci.org/jerome-baudoux/error-logger.svg?branch=master)](https://travis-ci.org/jerome-baudoux/error-logger)
 =======
 http://www.jerome-baudoux.com
 
